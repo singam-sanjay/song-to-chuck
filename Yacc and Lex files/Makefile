@@ -12,3 +12,8 @@ lexer: lex.yy.c y.tab.h
 
 parser: y.tab.c lex.yy.c
 	gcc -g -o parser lex.yy.c y.tab.c -ll
+
+all: lexer parser
+
+clean: clean-lex-yy-c
+	rm lexer parser lex.yy.c y.tab.c y.tab.h
