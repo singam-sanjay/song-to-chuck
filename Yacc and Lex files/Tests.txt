@@ -1,0 +1,1 @@
+23 | C , , . , , $C , , | |C D E F G A B C | : fail : CMaj chord not detected
