@@ -1,5 +1,5 @@
 lex.yy.c
 lexer
 parser
-y.tab.h
-y.tab.c
+parser_file.tab.h
+parser_file.tab.c
