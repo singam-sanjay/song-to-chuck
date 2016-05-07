@@ -5,13 +5,14 @@
 
 bool no_err = true;
 int no_of_BARs = 0;
+int bar_note_count = 0;
 
 const float isaiyin_gain = 0.6;
 
 void chuck_init_stmts();
 %}
 
-%token KEY DOT EXT chord bar tempo
+%token KEY DOT EXT chord bar tempo count
 %start SONG
 
 %%
@@ -19,10 +20,18 @@ TEMPO : tempo	      {
 				chuck_init_stmts();
 				printf("(60.0/%i)::second => dur tick;\n", $1);
 		      }
+
+COUNT : count		{
+      				bar_note_count = $1;
+				#ifdef DEBUG
+				fprintf(stderr,"bar_note_count = %i\n", bar_note_count);
+				#endif
+			}
+
 BAR   : bar UNITS bar { //Could add something to handle syntax errors
       			++no_of_BARs;
-			no_err &= ( ($$=( $2==8 ? 1 : 0 )) == 1 );
-			if( $2!=8 )
+			no_err &= ( ($$=( $2==bar_note_count ? 1 : 0 )) == 1 );
+			if( $2!=bar_note_count )
 			{
       				printf("bar# %i: #ticks = %i\n", no_of_BARs, $2);
 				exit(1);
@@ -68,7 +77,7 @@ CHORD : chord {
 BARS  : BARS BAR      { $$ = $1 + $2;} 
         | BAR         { $$ = $1;};
 
-SONG  : TEMPO BARS {
+SONG  : TEMPO COUNT BARS {
       			if(no_err)
 			{
 		//		printf("The song was fully converted\n");// "fully converted" could be in green

@@ -16,7 +16,7 @@ int line_num = 1;
 
 key ([cdefgabCDEFGAB]|([cdfgaCDFGA][#]))
 chord_key ([CDEFGAB]|([CDFGA][#]))
-
+int [1-9][0-9]*
 %%
 {key} {
 	switch( tolower(yytext[0]) )
@@ -74,12 +74,20 @@ chord_key ([CDEFGAB]|([CDFGA][#]))
 	return bar;
    }
 
-[1-9][0-9]* { 
+TEMPO:{int} { 
 		#ifdef DEBUG
 		printf("tempo\n");
 		#endif
-		yylval = atoi(yytext); return tempo;
+		yylval = atoi(yytext+6); return tempo;
 	    }
+
+COUNT:{int} {
+		#ifdef DEBUG
+		printf("count\n");
+		#endif
+		yylval = atoi(yytext+6); return count;
+	}
+
 [,] {
 	#ifdef DEBUG
 	printf("EXT\n");
